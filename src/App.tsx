@@ -10,6 +10,10 @@ function App() {
     setTodo("");
   }
 
+  const removeItem = (index: number) => {
+    setList(list.filter((_, i) => i !== index));
+  }
+
   return (
     <div style={{ padding: '20px' }}>
       <h1>Todo List</h1>
@@ -28,6 +32,9 @@ function App() {
         {list.map((item, index) => (
           <li key={index} style={{ marginBottom: '8px;' }}>
             {item}
+            <button onClick={() => removeItem(index)} style={{ marginLeft: '8px' }}>
+              Remove
+            </button>
           </li>
         ))}
       </ul>
