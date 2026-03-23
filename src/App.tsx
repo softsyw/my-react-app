@@ -7,6 +7,7 @@ interface TodoItem {
 
 function App() {
   const [todo, setTodo] = useState<string>("");
+  const [searchTerm, setSearchTerm] = useState<string>("");
 
   // 1. Initialize the list state with data from localStorage if available
   const [list, setList] = useState<TodoItem[]>(() => {
@@ -39,10 +40,23 @@ function App() {
     ));
   }
 
+  const filteredList = list.filter(item => item.title.toLowerCase().includes(searchTerm.toLowerCase()));
+
   return (
     <div style={{ padding: '20px' }}>
       <h1>Todo List</h1>
-      
+
+      <div className='search-box'>
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          placeholder="Search todo items..."
+        />
+      </div>
+
+      <hr />
+
       <input
         type="text"
         value={todo}
@@ -50,15 +64,18 @@ function App() {
         onKeyDown={(e) => e.key == 'Enter' && addList()}
         placeholder="Enter a todo item"
       />
-      
-      <button onClick={addList}>Add</button>
-      
 
+      <button onClick={addList}>Add</button>
+
+      <hr />
+      
       {list.length === 0 && <p>No items in the list.</p>}
+
+      {filteredList.length === 0 && list.length > 0 && <p>No items match your search.</p>}
 
       {/* Display the list of todo items */}
       <ul>
-        {list.map((item, index) => (
+        {filteredList.map((item, index) => (
           <li key={index} style={{ marginBottom: '8px;', listStyle: 'none'}}>
             <input
               type="checkbox"
