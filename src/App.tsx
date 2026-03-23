@@ -1,12 +1,17 @@
 import { useState } from 'react';
 
+interface TodoItem {
+  title: string;
+  checked: boolean;
+}
+
 function App() {
   const [todo, setTodo] = useState<string>("");
-  const [list, setList] = useState<string[]>([]);
+  const [list, setList] = useState<TodoItem[]>([]);
 
   const addList = () => {
     if (!todo.trim()) return;
-    setList([...list, todo]);
+    setList([...list, { title: todo, checked: false }]);
     setTodo("");
   }
 
@@ -16,6 +21,12 @@ function App() {
 
   const removeAll = () => {
     setList([]);
+  }
+
+  const toggleChecked = (index: number) => {
+    setList(list.map((item, i) => 
+      i === index ? { ...item, checked: !item.checked } : item
+    ));
   }
 
   return (
@@ -32,10 +43,21 @@ function App() {
       
       <button onClick={addList}>Add</button>
       
+
+      {list.length === 0 && <p>No items in the list.</p>}
+
+      {/* Display the list of todo items */}
       <ul>
         {list.map((item, index) => (
-          <li key={index} style={{ marginBottom: '8px;' }}>
-            {item}
+          <li key={index} style={{ marginBottom: '8px;', listStyle: 'none'}}>
+            <input
+              type="checkbox"
+              checked={item.checked}
+              onChange={() => toggleChecked(index)}
+            />
+            <span style={{ textDecoration: item.checked ? 'line-through' : 'none' }}>
+              {item.title}
+            </span>
             <button onClick={() => removeItem(index)} style={{ marginLeft: '8px' }}>
               Remove
             </button>
