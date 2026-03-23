@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface TodoItem {
   title: string;
@@ -7,11 +7,21 @@ interface TodoItem {
 
 function App() {
   const [todo, setTodo] = useState<string>("");
-  const [list, setList] = useState<TodoItem[]>([]);
+
+  // 1. Initialize the list state with data from localStorage if available
+  const [list, setList] = useState<TodoItem[]>(() => {
+    const storedList = localStorage.getItem('todoList');
+    return storedList ? JSON.parse(storedList) : [];
+  });
+
+  // 2. Sync the list state with localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('todoList', JSON.stringify(list));
+  }, [list]); 
 
   const addList = () => {
     if (!todo.trim()) return;
-    setList([...list, { title: todo, checked: false }]);
+    setList([...list, { title: todo.trim(), checked: false }]);
     setTodo("");
   }
 
