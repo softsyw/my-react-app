@@ -14,6 +14,10 @@ function App() {
     setList(list.filter((_, i) => i !== index));
   }
 
+  const removeAll = () => {
+    setList([]);
+  }
+
   return (
     <div style={{ padding: '20px' }}>
       <h1>Todo List</h1>
@@ -38,6 +42,8 @@ function App() {
           </li>
         ))}
       </ul>
+
+      <button onClick={removeAll} style={{ marginTop: '20px' }}> Remove All</button>
 
     </div>
   );
